@@ -1,4 +1,4 @@
-module github.com/360EntSecGroup-Skylar/excelize
+module github.com/wubin1989/excelize
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
