@@ -300,12 +300,18 @@ func (f *File) SetSheetName(oldName, newName string) {
 func (f *File) GetSheetName(index int) string {
 	content := f.workbookReader()
 	rels := f.workbookRelsReader()
+	re := regexp.MustCompile(`/sheet(\d+).xml$`)
 	for _, rel := range rels.Relationships {
-		rID, _ := strconv.Atoi(strings.TrimSuffix(strings.TrimPrefix(rel.Target, "worksheets/sheet"), ".xml"))
-		if rID == index {
-			for _, v := range content.Sheets.Sheet {
-				if v.ID == rel.ID {
-					return v.Name
+		if re.MatchString(rel.Target) {
+			rID, err := strconv.Atoi(re.FindStringSubmatch(rel.Target)[1])
+			if err != nil {
+				return ""
+			}
+			if rID == index {
+				for _, v := range content.Sheets.Sheet {
+					if v.ID == rel.ID {
+						return v.Name
+					}
 				}
 			}
 		}
